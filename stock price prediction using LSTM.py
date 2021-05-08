@@ -55,3 +55,28 @@ model = keras.models(inputs=inputs, outputs=outputs)
 
 model.compile(optimizer= 'adam', loss= 'mse')
 model.summary()
+
+history = model.fit(x_train, y_train, epochs = 20, batch_size = 32, validation_split = 0.2)
+
+predicted = model.predict(x)
+
+test_predicted = []
+
+for i in predicted:
+    test_predicted.append(i[0][0])
+
+print(test_predicted)
+
+df_predicted = price_volume_df[1:][['Date']]
+df_predicted['predictions'] = test_predicted
+
+close = []
+
+for i in training_set_scaled:
+    close.append(i[0])
+
+df_predicted['Close'] = close[1:]
+
+interactive_plot(df_predicted, 'Original price vs LSTM predictions')
+    
+
